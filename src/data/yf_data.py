@@ -1,6 +1,5 @@
 import json
 import logging
-import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
@@ -26,7 +25,7 @@ default_query = EquityQuery(
 
 
 def get_yf_data(
-    query = default_query, page_limit = 250,
+    query = default_query, quote_limit_per_page = 250,
     throttle = MIN_API_THROTTLE, cache_name = DEFAULT_CACHE_NAME,
     force_refresh = False,
 ) -> list[dict]:
@@ -69,7 +68,7 @@ def get_yf_data(
 
     if len(all_quotes) == 0:
         logger.info("Cache miss: fetching data from API")
-        all_quotes = _fetch_data(query, page_limit, throttle)
+        all_quotes = _fetch_data(query, quote_limit_per_page, throttle)
         cache = {
             "date": date_today,
             "hour": now.hour,
@@ -84,37 +83,37 @@ def get_yf_data(
     return all_quotes
 
 
-def _fetch_data(query, page_limit, throttle) -> list[dict]:
+def _fetch_data(query, quote_limit_per_page, throttle) -> list[dict]:
     all_quotes = []
     throttle = max(throttle, MIN_API_THROTTLE)
-    page_limit = min(page_limit, 250)
+    quote_limit_per_page = min(quote_limit_per_page, 250)
     page_count = 1
-    total = page_limit
+    total = quote_limit_per_page
     offset = 0
 
     def fetch_page_and_update():
         nonlocal total, offset, all_quotes
         logger.info(
-            f"Fetching page {page_count}: offset={offset}, page_limit={page_limit}",
+            f"Fetching page {page_count}: offset={offset}, page_limit={quote_limit_per_page}",
         )
         result = yf.screen(
             query,
-            size = page_limit,
+            size = quote_limit_per_page,
             offset = offset,
         )
         if not result or "quotes" not in result:
             raise RuntimeError(f"Failed to fetch page at offset {offset}")
-        new_quotes = result["quotes"]
-        all_quotes.extend(new_quotes)
+        page_quotes = result["quotes"]
+        all_quotes.extend(page_quotes)
         total = int(result['total'])
-        offset += int(result['count'])
-        return new_quotes
+        offset += int(len(page_quotes))
+        return page_quotes
 
     # first run
     fetch_page_and_update()
 
     # additional pages
-    if page_limit >= 250:
+    if quote_limit_per_page >= 250:
         page_count = 2
         while offset < total:
             time.sleep(throttle)
@@ -135,5 +134,5 @@ def _get_cache_dir():
 if __name__ == "__main__":
     setup_logging()
     data = get_yf_data()
-    directory = _get_cache_dir()
-    subprocess.run(f'explorer "{directory}"')
+    # directory = _get_cache_dir()
+    # subprocess.run(f'explorer "{directory}"')
