@@ -1,0 +1,7 @@
+name = "personal screener"
+version = "0.1.0"
+description = "A personal stock screener"
+authors = [{ name = "Lars Spangenberg", email = "lazerus88@gmail.com" }]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.13"
