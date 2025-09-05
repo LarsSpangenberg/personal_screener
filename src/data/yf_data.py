@@ -93,7 +93,7 @@ def _fetch_data(query, quote_limit_per_page, throttle) -> list[dict]:
 
     def fetch_page_and_update():
         nonlocal total, offset, all_quotes
-        logger.info(
+        logger.debug(
             f"Fetching page {page_count}: offset={offset}, page_limit={quote_limit_per_page}",
         )
         result = yf.screen(
@@ -114,6 +114,9 @@ def _fetch_data(query, quote_limit_per_page, throttle) -> list[dict]:
 
     # additional pages
     if quote_limit_per_page >= 250:
+        if offset < total:
+            logger.info(f"Throttling an paginating result for {total} quotes")
+
         page_count = 2
         while offset < total:
             time.sleep(throttle)
