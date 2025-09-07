@@ -1,5 +1,6 @@
 import json
 import logging
+import subprocess
 import time
 from datetime import datetime
 from pathlib import Path
@@ -9,23 +10,20 @@ from platformdirs import user_cache_dir
 from yfinance import EquityQuery
 
 from src.core.logging_config import setup_logging
+from src.data.base_data.yf_filters import (
+    default_filters,
+    map_filters_to_yf_query,
+)
+from src.schemas.filters import ScreenerFilters
 
 logger = logging.getLogger(__name__)
 
 DEFAULT_CACHE_NAME = 'initial_data_cache'
 MIN_API_THROTTLE = 0.5
 
-default_query = EquityQuery(
-    'AND', [
-        EquityQuery('EQ', ['region', 'us']),  # type: ignore
-        EquityQuery('GTE', ['avgdailyvol3m', 500000]),  # type: ignore
-        EquityQuery('BTWN', ['eodprice', 7, 100]),  # type: ignore
-    ],
-)
-
 
 def get_yf_data(
-    query = default_query, quote_limit_per_page = 250,
+    filters: ScreenerFilters = default_filters, quote_limit_per_page = 250,
     throttle = MIN_API_THROTTLE, cache_name = DEFAULT_CACHE_NAME,
     force_refresh = False,
 ) -> list[dict]:
@@ -45,6 +43,7 @@ def get_yf_data(
     -----------
     raw quote data from the yfinance.screen method.
     """
+    yf_query = map_filters_to_yf_query(filters)
     all_quotes = []
     now = datetime.now()
     date_today = now.strftime("%m%d%Y")
@@ -68,7 +67,7 @@ def get_yf_data(
 
     if len(all_quotes) == 0:
         logger.info("Cache miss: fetching data from API")
-        all_quotes = _fetch_data(query, quote_limit_per_page, throttle)
+        all_quotes = _fetch_data(yf_query, quote_limit_per_page, throttle)
         cache = {
             "date": date_today,
             "hour": now.hour,
@@ -83,7 +82,11 @@ def get_yf_data(
     return all_quotes
 
 
-def _fetch_data(query, quote_limit_per_page, throttle) -> list[dict]:
+def _fetch_data(
+    query: EquityQuery,
+    quote_limit_per_page,
+    throttle,
+) -> list[dict]:
     all_quotes = []
     throttle = max(throttle, MIN_API_THROTTLE)
     quote_limit_per_page = min(quote_limit_per_page, 250)
@@ -97,7 +100,7 @@ def _fetch_data(query, quote_limit_per_page, throttle) -> list[dict]:
             f"Fetching page {page_count}: offset={offset}, page_limit={quote_limit_per_page}",
         )
         result = yf.screen(
-            query,
+            query = query,
             size = quote_limit_per_page,
             offset = offset,
         )
@@ -137,5 +140,5 @@ def _get_cache_dir():
 if __name__ == "__main__":
     setup_logging()
     data = get_yf_data()
-    # directory = _get_cache_dir()
-    # subprocess.run(f'explorer "{directory}"')
+    directory = _get_cache_dir()
+    subprocess.run(f'explorer "{directory}"')
