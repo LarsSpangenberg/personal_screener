@@ -1,5 +1,5 @@
-from src.data.base_data.normalize_yf_quotes import normalize_yf_base_data
-from src.data.base_data.yf_data import get_yf_data
+from src.data.base_data.yf_filters import default_filters
+from src.data.initialize_data import load_quotes_from_cache
 from src.schemas.filters import ScreenerFilters
 
 
@@ -31,15 +31,15 @@ from src.schemas.filters import ScreenerFilters
 #       price
 # return best tickers
 
-def screen(filters: ScreenerFilters):
-    raw_data = get_yf_data(filters)
-    # filter raw data
-    #   apply ma50, and ma200 filters here
-    quotes = normalize_yf_base_data(raw_data)
+def screen(filters: ScreenerFilters = default_filters):
+    data = load_quotes_from_cache()
+    quotes = list(data.values())  # will add sort and filtering later
     # handle normalized data
-    #   calculate rest of the data
-    #   fetch other api method to enrich data
     #   apply filters for enriched data
     #   apply sorting/grouping as the last thing
 
     return quotes
+
+
+if __name__ == "__main__":
+    screen()
