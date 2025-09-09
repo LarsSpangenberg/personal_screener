@@ -9,6 +9,8 @@ from src.data.cache_manager import (
     CACHE_DIR, CACHE_FILE, load_quotes_from_cache,
     save_quotes_to_cache,
 )
+from src.data.price_history.indicators.calculate_indicators import \
+    calculate_indicators
 from src.data.price_history.price_history_cache import \
     get_price_history_or_cache
 from src.data.quote_freshness import is_fresh
@@ -43,9 +45,9 @@ def initialize_data(filters: ScreenerFilters = default_filters) -> dict[
     # 3. Enrich with indicators (download price history + cache)
     #    Currently: full-list download of ~2 months daily data
     price_history_df = get_price_history_or_cache(tickers)
-    print("got price history")
-
-    subprocess.run(["explorer", str(CACHE_DIR)])
+    enriched_quotes = calculate_indicators(price_history_df, quotes)
+    save_quotes_to_cache(enriched_quotes)
+    print("downloaded price history")
 
     return quotes
 
@@ -53,3 +55,5 @@ def initialize_data(filters: ScreenerFilters = default_filters) -> dict[
 if __name__ == "__main__":
     setup_logging()
     initialize_data()
+
+    subprocess.run(["explorer", str(CACHE_DIR)])

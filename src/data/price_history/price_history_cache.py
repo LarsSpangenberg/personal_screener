@@ -11,13 +11,13 @@ def load_price_history_from_cache(
 ) -> pd.DataFrame:
     """Read cached price history JSON back into a DataFrame (orient='split')."""
     cache_path = CACHE_DIR / cache_filename
-    return pd.read_json(cache_path, orient = "split")
+    return pd.read_parquet(cache_path)
 
 
 def get_price_history_or_cache(
     tickers: list[str],
     months_back: int = 2,
-    cache_filename: str = "price_history.json",
+    cache_filename: str = "price_history.parquet",
 ) -> pd.DataFrame:
     """
     Temporary helper: return cached DataFrame if fresh; else download+cache.

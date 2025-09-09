@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 def download_full_price_history(
     tickers: list[str],
     months_back: int = 2,
-    cache_filename: str = "price_history.json",
+    cache_filename: str = "price_history.parquet",
 ) -> pd.DataFrame:
     """
     Download daily price history for the given tickers and cache to JSON.
@@ -47,10 +47,8 @@ def download_full_price_history(
     cache_dir.mkdir(parents = True, exist_ok = True)
     cache_path = cache_dir / cache_filename
 
-    # Convert DataFrame to JSON
-    json_data = df.to_json(orient = "split", date_format = "iso")
-    with open(cache_path, "w", encoding = "utf-8") as f:
-        f.write(json_data)
+    # Save as Parquet (preserves MultiIndex columns + datetimes)
+    df.to_parquet(cache_path, engine = "pyarrow")
 
     logger.info("Saved price history to cache: %s", cache_path)
 
