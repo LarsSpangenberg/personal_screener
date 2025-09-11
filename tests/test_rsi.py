@@ -1,5 +1,5 @@
-import math
 import unittest
+
 import pandas as pd
 
 from personal_screener.data.price_history.indicators.rsi import calculate_rsi
@@ -14,7 +14,7 @@ class TestCalculateRSI(unittest.TestCase):
             ],
         )
         value = calculate_rsi(close)  # default period=14
-        self.assertIsInstance(value, float) or math.isnan(value)
+        self.assertIsInstance(value, float)
 
     def test_uptrend_results_in_high_rsi(self):
         # Monotonic uptrend should push RSI high (often near 100 with Wilder-style smoothing)
@@ -31,7 +31,7 @@ class TestCalculateRSI(unittest.TestCase):
         # Fewer than period=14 data points -> EWM with min_periods=14 produces NaN at the end
         close = pd.Series([100, 101, 102, 103, 104, 105, 106, 107, 108, 109])
         value = calculate_rsi(close, period = 14)
-        self.assertTrue(math.isnan(value))
+        self.assertTrue(pd.isna(value))
 
     def test_constant_prices_returns_50(self):
         # Gains and losses are all zero -> RS becomes 0/0 -> NaN

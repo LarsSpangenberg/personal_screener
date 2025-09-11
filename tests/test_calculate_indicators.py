@@ -1,4 +1,3 @@
-import math
 import unittest
 
 import pandas as pd
@@ -160,5 +159,5 @@ class TestCalculateIndicators(unittest.TestCase):
         updated = calculate_indicators(price_history, quotes)
 
         # With only 5 points, MA20 and RSI(14) should be NaN
-        self.assertTrue(math.isnan(updated["AAA"].ma20))
-        self.assertTrue(math.isnan(updated["AAA"].rsi))
+        self.assertTrue(pd.isna(updated["AAA"].ma20))
+        self.assertTrue(pd.isna(updated["AAA"].rsi))
