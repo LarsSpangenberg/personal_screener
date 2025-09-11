@@ -2,10 +2,10 @@ from typing import Dict
 
 import pandas as pd
 
-from src.data.price_history.indicators.moving_averages import \
+from personal_screener.data.price_history.indicators.moving_averages import \
     calculate_moving_averages
-from src.data.price_history.indicators.rsi import calculate_rsi
-from src.schemas.quote import Quote
+from personal_screener.data.price_history.indicators.rsi import calculate_rsi
+from personal_screener.schemas.quote import Quote
 
 
 def calculate_indicators(
