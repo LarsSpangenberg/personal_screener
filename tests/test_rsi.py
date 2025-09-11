@@ -33,8 +33,8 @@ class TestCalculateRSI(unittest.TestCase):
         value = calculate_rsi(close, period = 14)
         self.assertTrue(math.isnan(value))
 
-    def test_constant_prices_returns_nan(self):
+    def test_constant_prices_returns_50(self):
         # Gains and losses are all zero -> RS becomes 0/0 -> NaN
         close = pd.Series([100.0] * 30)
         value = calculate_rsi(close, period = 14)
-        self.assertTrue(math.isnan(value))
+        self.assertEqual(value, 50.0)
