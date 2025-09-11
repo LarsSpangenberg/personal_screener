@@ -1,10 +1,10 @@
 from yfinance import EquityQuery
 
-from src.data.base_data.yf_queries import (
+from personal_screener.data.base_data.yf_queries import (
     create_basic_query,
     handle_market_cap, handle_price_range,
 )
-from src.schemas.filters import ScreenerFilters
+from personal_screener.schemas.filters import ScreenerFilters
 
 # NOTE: US region is always applied by default
 default_filters = ScreenerFilters(

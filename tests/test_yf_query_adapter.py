@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import patch
 
-from src.data.base_data import yf_filters, yf_queries
-from src.data.base_data.yf_filters import map_filters_to_yf_query
-from src.schemas.filters import ScreenerFilters
+from personal_screener.data.base_data import yf_filters, yf_queries
+from personal_screener.data.base_data.yf_filters import map_filters_to_yf_query
+from personal_screener.schemas.filters import ScreenerFilters
 
 
 class TestYfAdapter(unittest.TestCase):

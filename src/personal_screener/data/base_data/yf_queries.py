@@ -3,7 +3,7 @@ from typing import List
 
 from yfinance import EquityQuery
 
-from src.schemas.filters import ScreenerFilters
+from personal_screener.schemas.filters import ScreenerFilters
 
 MARKET_CAP_QUERIES = {
     "LOW": lambda: create_basic_query(

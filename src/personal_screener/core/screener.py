@@ -1,6 +1,6 @@
-from src.data.base_data.yf_filters import default_filters
-from src.data.initialize_data import load_quotes_from_cache
-from src.schemas.filters import ScreenerFilters
+from personal_screener.data.base_data.yf_filters import default_filters
+from personal_screener.data.cache_manager import load_quotes_from_cache
+from personal_screener.schemas.filters import ScreenerFilters
 
 
 # === SCREENER LOGIC TO IMPLEMENT===================================

@@ -2,9 +2,11 @@ import unittest
 from datetime import datetime
 from unittest.mock import patch
 
-import src.data.base_data.normalize_yf_quote as normalize_yf_quote_module
-from src.data.base_data.normalize_yf_quote import normalize_yf_quote
-from src.schemas.quote import Quote
+import personal_screener.data.base_data.normalize_yf_quote as \
+    normalize_yf_quote_module
+from personal_screener.data.base_data.normalize_yf_quote import \
+    normalize_yf_quote
+from personal_screener.schemas.quote import Quote
 
 
 class TestYfQuoteAdapter(unittest.TestCase):

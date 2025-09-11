@@ -4,7 +4,7 @@ from pathlib import Path
 
 from platformdirs import user_cache_dir
 
-from src.schemas.quote import Quote
+from personal_screener.schemas.quote import Quote
 
 CACHE_DIR = Path(user_cache_dir("personal_screener", "Lars Spangenberg"))
 CACHE_FILE = CACHE_DIR / "quotes.json"

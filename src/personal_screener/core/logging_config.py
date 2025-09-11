@@ -9,5 +9,3 @@ def setup_logging():
         datefmt = '%H:%M:%S',
         force = True,
     )
-
-logger = logging.getLogger("personal_screener")

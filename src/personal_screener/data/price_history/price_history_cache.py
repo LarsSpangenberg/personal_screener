@@ -1,9 +1,9 @@
 import pandas as pd
 
-from src.data.cache_manager import CACHE_DIR
-from src.data.price_history.download_price_history import \
+from src.personal_screener.data.cache_manager import CACHE_DIR
+from src.personal_screener.data.price_history.download_price_history import \
     download_full_price_history
-from src.data.quote_freshness import is_fresh
+from src.personal_screener.data.quote_freshness import is_fresh
 
 
 def load_price_history_from_cache(

@@ -1,6 +1,6 @@
 import unittest
 
-from src.schemas.filters import ScreenerFilters
+from personal_screener.schemas.filters import ScreenerFilters
 
 
 class TestScreenerFilters(unittest.TestCase):

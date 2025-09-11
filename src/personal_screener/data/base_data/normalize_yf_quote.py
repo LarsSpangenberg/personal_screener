@@ -1,7 +1,7 @@
 import logging
 from datetime import datetime
 
-from src.schemas.quote import Quote
+from personal_screener.schemas.quote import Quote
 
 logger = logging.getLogger(__name__)
 

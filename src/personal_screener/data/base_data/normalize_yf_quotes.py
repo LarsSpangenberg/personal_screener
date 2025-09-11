@@ -1,5 +1,6 @@
-from src.data.base_data.normalize_yf_quote import normalize_yf_quote
-from src.schemas.quote import Quote
+from personal_screener.data.base_data.normalize_yf_quote import \
+    normalize_yf_quote
+from personal_screener.schemas.quote import Quote
 
 
 def normalize_yf_base_data(raw_quotes: list[dict]) -> tuple[

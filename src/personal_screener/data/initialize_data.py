@@ -1,21 +1,21 @@
 import logging
 import subprocess
 
-from src.core.logging_config import setup_logging
-from src.data.base_data.normalize_yf_quotes import normalize_yf_base_data
-from src.data.base_data.yf_data import get_yf_data
-from src.data.base_data.yf_filters import default_filters
-from src.data.cache_manager import (
-    CACHE_DIR, CACHE_FILE, load_quotes_from_cache,
+from personal_screener.core.logging_config import setup_logging
+from personal_screener.data.base_data.normalize_yf_quotes import \
+    normalize_yf_base_data
+from personal_screener.data.base_data.yf_data import get_yf_data
+from personal_screener.data.base_data.yf_filters import default_filters
+from personal_screener.data.cache_manager import (
+    CACHE_DIR,
     save_quotes_to_cache,
 )
-from src.data.price_history.indicators.calculate_indicators import \
+from personal_screener.data.price_history.indicators.calculate_indicators import \
     calculate_indicators
-from src.data.price_history.price_history_cache import \
+from personal_screener.data.price_history.price_history_cache import \
     get_price_history_or_cache
-from src.data.quote_freshness import is_fresh
-from src.schemas.filters import ScreenerFilters
-from src.schemas.quote import Quote
+from personal_screener.schemas.filters import ScreenerFilters
+from personal_screener.schemas.quote import Quote
 
 logger = logging.getLogger(__name__)
 

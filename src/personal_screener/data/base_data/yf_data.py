@@ -9,12 +9,12 @@ import yfinance as yf
 from platformdirs import user_cache_dir
 from yfinance import EquityQuery
 
-from src.core.logging_config import setup_logging
-from src.data.base_data.yf_filters import (
+from personal_screener.core.logging_config import setup_logging
+from personal_screener.data.base_data.yf_filters import (
     default_filters,
     map_filters_to_yf_query,
 )
-from src.schemas.filters import ScreenerFilters
+from personal_screener.schemas.filters import ScreenerFilters
 
 logger = logging.getLogger(__name__)
 
