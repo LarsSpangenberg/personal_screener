@@ -125,11 +125,11 @@ class TestCalculateIndicators(unittest.TestCase):
 
         quotes = {
             "AAA": Quote(
-                symbol = "AAA", price = close_a.iloc[-1], avg_vol = 500000,
+                symbol = "AAA", price = close_a.iloc[-1], avg_vol = 500_000,
                 market_cap = 5_000_000,
             ),
             "BBB": Quote(
-                symbol = "BBB", price = 123.0, avg_vol = 500000,
+                symbol = "BBB", price = 123.0, avg_vol = 500_000,
                 market_cap = 5_000_000,
             ),
         }
