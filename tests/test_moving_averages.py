@@ -2,7 +2,7 @@ import unittest
 
 import pandas as pd
 
-from personal_screener.data.price_history.indicators.moving_averages import \
+from personal_screener.core.indicators.moving_averages import \
     calculate_moving_averages
 
 

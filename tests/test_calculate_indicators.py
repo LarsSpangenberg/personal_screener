@@ -2,11 +2,11 @@ import unittest
 
 import pandas as pd
 
-from personal_screener.data.price_history.indicators.calculate_indicators import \
-    calculate_indicators
-from personal_screener.data.price_history.indicators.moving_averages import \
+from personal_screener.core.quotes.enrich_quotes import \
+    calculate_indicators_and_signals
+from personal_screener.core.indicators.moving_averages import \
     calculate_moving_averages
-from personal_screener.data.price_history.indicators.rsi import calculate_rsi
+from personal_screener.core.indicators.rsi import calculate_rsi
 from personal_screener.schemas.quote import Quote
 
 
@@ -75,7 +75,7 @@ class TestCalculateIndicators(unittest.TestCase):
             ),
         }
 
-        updated = calculate_indicators(price_history, quotes)
+        updated = calculate_indicators_and_signals(price_history, quotes)
 
         # Expect all indicator fields set to floats
         for sym in ["AAA", "BBB"]:
@@ -134,7 +134,7 @@ class TestCalculateIndicators(unittest.TestCase):
             ),
         }
 
-        updated = calculate_indicators(price_history, quotes)
+        updated = calculate_indicators_and_signals(price_history, quotes)
 
         # AAA should be updated, BBB should remain with None indicators
         self.assertIsInstance(updated["AAA"].ma3, float)
@@ -156,7 +156,7 @@ class TestCalculateIndicators(unittest.TestCase):
                 market_cap = 1_000_000,
             ),
         }
-        updated = calculate_indicators(price_history, quotes)
+        updated = calculate_indicators_and_signals(price_history, quotes)
 
         # With only 5 points, MA20 and RSI(14) should be NaN
         self.assertTrue(pd.isna(updated["AAA"].ma20))

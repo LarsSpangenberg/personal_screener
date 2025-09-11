@@ -7,7 +7,7 @@ MARKET_CLOSE = time(16, 0)
 REFRESH_DELAY = timedelta(minutes = 5)
 
 
-def is_fresh(path: Path) -> bool:
+def is_cache_market_fresh(path: Path) -> bool:
     """Check if cache is valid based on Eastern Time market close."""
     if not path.exists():
         return False

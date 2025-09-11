@@ -2,6 +2,8 @@ import logging
 import subprocess
 
 from personal_screener.core.logging_config import setup_logging
+from personal_screener.core.quotes.enrich_quotes import \
+    calculate_indicators_and_signals
 from personal_screener.data.base_data.normalize_yf_quotes import \
     normalize_yf_base_data
 from personal_screener.data.base_data.yf_data import get_yf_data
@@ -10,8 +12,6 @@ from personal_screener.data.cache_manager import (
     CACHE_DIR,
     save_quotes_to_cache,
 )
-from personal_screener.data.price_history.indicators.calculate_indicators import \
-    calculate_indicators
 from personal_screener.data.price_history.price_history_cache import \
     get_price_history_or_cache
 from personal_screener.schemas.filters import ScreenerFilters
@@ -45,7 +45,10 @@ def initialize_data(filters: ScreenerFilters = default_filters) -> dict[
     # 3. Enrich with indicators (download price history + cache)
     #    Currently: full-list download of ~2 months daily data
     price_history_df = get_price_history_or_cache(tickers)
-    enriched_quotes = calculate_indicators(price_history_df, quotes)
+    enriched_quotes = calculate_indicators_and_signals(
+        price_history_df, quotes,
+    )
+
     save_quotes_to_cache(enriched_quotes)
     print("downloaded price history")
 

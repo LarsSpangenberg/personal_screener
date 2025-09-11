@@ -2,13 +2,13 @@ from typing import Dict
 
 import pandas as pd
 
-from personal_screener.data.price_history.indicators.moving_averages import \
+from personal_screener.core.indicators.moving_averages import \
     calculate_moving_averages
-from personal_screener.data.price_history.indicators.rsi import calculate_rsi
+from personal_screener.core.indicators.rsi import calculate_rsi
 from personal_screener.schemas.quote import Quote
 
 
-def calculate_indicators(
+def calculate_indicators_and_signals(
     price_history: pd.DataFrame,
     quotes: Dict[str, Quote],
 ) -> Dict[str, Quote]:

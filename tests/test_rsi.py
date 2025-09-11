@@ -2,7 +2,7 @@ import unittest
 
 import pandas as pd
 
-from personal_screener.data.price_history.indicators.rsi import calculate_rsi
+from personal_screener.core.indicators.rsi import calculate_rsi
 
 
 class TestCalculateRSI(unittest.TestCase):

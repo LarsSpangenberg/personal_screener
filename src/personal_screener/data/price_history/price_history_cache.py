@@ -3,7 +3,7 @@ import pandas as pd
 from src.personal_screener.data.cache_manager import CACHE_DIR
 from src.personal_screener.data.price_history.download_price_history import \
     download_full_price_history
-from src.personal_screener.data.quote_freshness import is_fresh
+from src.personal_screener.data.cache_market_freshness import is_cache_market_fresh
 
 
 def load_price_history_from_cache(
@@ -23,7 +23,7 @@ def get_price_history_or_cache(
     Temporary helper: return cached DataFrame if fresh; else download+cache.
     """
     cache_path = CACHE_DIR / cache_filename
-    if cache_path.exists() and is_fresh(cache_path):
+    if cache_path.exists() and is_cache_market_fresh(cache_path):
         return load_price_history_from_cache(cache_filename)
 
     # Falls back to your existing downloader (which writes the JSON cache)
