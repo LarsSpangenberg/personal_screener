@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 import yfinance as yf
 
-from src.data.cache_manager import CACHE_DIR
+from personal_screener.data.cache_manager import CACHE_DIR
 
 logger = logging.getLogger(__name__)
 
