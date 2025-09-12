@@ -14,3 +14,7 @@ class Quote:
     ma50: Optional[float] = None
     ma200: Optional[float] = None
     rsi: Optional[float] = None
+
+    # Signals
+    is_3ma_trending_up: bool = False
+    is_10ma_trending_up: bool = False
