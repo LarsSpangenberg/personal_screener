@@ -10,9 +10,9 @@ def evaluate_numeric_range(
     Check if a quote's value falls inside the given range.
     Range is (min, max), where either bound can be None.
     """
-    if min_value is not None and quote_value <= min_value:
+    if min_value is not None and quote_value < min_value:
         return False
-    if max_value is not None and quote_value >= max_value:
+    if max_value is not None and quote_value > max_value:
         return False
 
     return True
