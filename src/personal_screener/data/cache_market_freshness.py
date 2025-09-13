@@ -20,14 +20,15 @@ def is_cache_market_fresh(path: Path) -> bool:
     ) + REFRESH_DELAY
     market_close_yesterday = market_close_today - timedelta(days = 1)
 
-    if mtime.date() == now.date():
-        return mtime >= market_close_today  # only fresh if updated after today’s close
-
+    # Still fresh window: yesterday's close -> today's close
     if (
             market_close_yesterday <= mtime < market_close_today
             and now < market_close_today
     ):
-        # Still fresh window: yesterday's close to today's close
         return True
+
+    # only fresh if updated after today’s close
+    if mtime.date() == now.date():
+        return mtime >= market_close_today
 
     return False
