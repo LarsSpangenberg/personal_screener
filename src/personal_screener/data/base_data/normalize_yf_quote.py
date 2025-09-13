@@ -79,4 +79,5 @@ def normalize_yf_quote(quote: dict) -> Quote:
         market_cap = quote.get("marketCap"),
         avg_vol = quote.get("averageDailyVolume3Month"),
         ma50 = quote.get("fiftyDayAverage"),
-        ma200 = quote.get("twoHundredDayAverage"), )
+        ma200 = quote.get("twoHundredDayAverage"),
+    )

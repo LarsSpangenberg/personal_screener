@@ -53,7 +53,7 @@ class TestYfAdapter(unittest.TestCase):
 
     def test_convert_filters_to_yf_query_query_creation(self):
         filters = ScreenerFilters(
-            avg_volume = ("GTE", 500_000),
+            avg_vol = ("GTE", 500_000),
         )
 
         # Patch both create_basic_query and EquityQuery

@@ -1,5 +1,3 @@
-from typing import Dict
-
 import pandas as pd
 
 from personal_screener.core.indicators.moving_averages import \
@@ -9,13 +7,13 @@ from personal_screener.core.signals.uptrend_signals import (
     is_10ma_uptrend,
     is_3ma_uptrend,
 )
-from personal_screener.schemas.quote import Quote
+from personal_screener.schemas.types import QuoteData
 
 
 def calculate_indicators_and_signals(
     price_history: pd.DataFrame,
-    quotes: Dict[str, Quote],
-) -> Dict[str, Quote]:
+    quotes: QuoteData,
+) -> QuoteData:
     """
     For each ticker in the MultiIndex price_history DataFrame,
     compute MA3/MA10/MA20 and RSI(14), then assign to Quote.

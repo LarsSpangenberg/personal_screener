@@ -2,7 +2,7 @@ import unittest
 
 import pandas as pd
 
-from personal_screener.core.quotes.enrich_quotes import \
+from personal_screener.core.enrich_quotes import \
     calculate_indicators_and_signals
 from personal_screener.core.indicators.moving_averages import \
     calculate_moving_averages

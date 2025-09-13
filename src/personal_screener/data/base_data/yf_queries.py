@@ -6,7 +6,7 @@ from yfinance import EquityQuery
 from personal_screener.schemas.filters import ScreenerFilters
 
 MARKET_CAP_QUERIES = {
-    "LOW": lambda: create_basic_query(
+    "SMALL": lambda: create_basic_query(
         'LTE',
         'intradaymarketcap',
         2_000_000_000,
@@ -17,7 +17,7 @@ MARKET_CAP_QUERIES = {
         10_000_000_000,
 
     ),
-    "HIGH": lambda: create_basic_query(
+    "LARGE": lambda: create_basic_query(
         'GTE',
         'intradaymarketcap',
         10_000_000_000,

@@ -1,9 +1,10 @@
 from dataclasses import dataclass
-from typing import Literal, Optional
+from typing import Optional
 
-Operator = Literal["GT", "LT", "GTE", "LTE", "EQ"]
-MarketCap = Literal["LOW", "MID", "HIGH"]
-OptionalPrice = float | None
+from personal_screener.schemas.types import (
+    BetweenCondition, MarketCap,
+    OperatorCondition,
+)
 
 
 @dataclass
@@ -15,7 +16,16 @@ class ScreenerFilters:
     values to apply GTE or LTE
     """
     market_cap: Optional[MarketCap] = None
-    avg_volume: Optional[tuple[str, int]] = None
-    price_range: Optional[tuple[OptionalPrice, OptionalPrice]] = None
-    ma50: Optional[tuple[str, float]] = None
-    ma200: Optional[tuple[str, float]] = None
+    avg_vol: Optional[OperatorCondition] = None
+    price_range: Optional[BetweenCondition] = None
+
+    ma3: Optional[OperatorCondition] = None
+    ma10: Optional[OperatorCondition] = None
+    ma20: Optional[OperatorCondition] = None
+    ma50: Optional[OperatorCondition] = None
+    ma200: Optional[OperatorCondition] = None
+    rsi: Optional[OperatorCondition] = None
+
+    # signals
+    is_3ma_trending_up: Optional[bool] = None
+    is_10ma_trending_up: Optional[bool] = None

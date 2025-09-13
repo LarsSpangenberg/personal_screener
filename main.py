@@ -7,9 +7,8 @@ Created on Tue Sep  2 19:33:34 2025.
 
 import logging
 
-from src.core.logging_config import setup_logging
-from src.core.screener import screen
-from src.data.base_data.yf_data import get_yf_data
+from personal_screener.core.logging_config import setup_logging
+from personal_screener.core.screener import screen
 
 logger = logging.getLogger(__name__)
 
