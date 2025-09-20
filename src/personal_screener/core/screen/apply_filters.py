@@ -1,5 +1,5 @@
 from dataclasses import asdict, fields
-from typing import Union, get_args, get_origin
+from typing import get_origin
 
 from personal_screener.core.evaluators.market_cap_condition import \
     evaluate_market_cap
@@ -7,6 +7,7 @@ from personal_screener.core.evaluators.numeric_operator_conditions import \
     evaluate_numeric_operator_condition
 from personal_screener.core.evaluators.numeric_range_condition import \
     evaluate_numeric_range
+from personal_screener.core.utils import unwrap_optional
 from personal_screener.data.base_data.yf_filters import default_filters
 from personal_screener.schemas.filters import ScreenerFilters
 from personal_screener.schemas.types import (
@@ -95,12 +96,3 @@ def apply_filters(quotes: QuoteData, filters: ScreenerFilters) -> QuoteData:
             result[symbol] = quote
 
     return result
-
-
-def unwrap_optional(field_type):
-    """Return the inner type if field_type is Optional[...]"""
-    if get_origin(field_type) is Union:
-        args = [arg for arg in get_args(field_type) if arg is not type(None)]
-        if len(args) == 1:
-            return args[0]
-    return field_type

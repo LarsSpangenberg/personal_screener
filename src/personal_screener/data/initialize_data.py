@@ -1,9 +1,9 @@
 import logging
 import subprocess
 
-from personal_screener.core.enrich_quotes import \
-    calculate_indicators_and_signals
 from personal_screener.core.logging_config import setup_logging
+from personal_screener.core.screen.enrich_quotes import \
+    calculate_indicators_and_signals
 from personal_screener.data.base_data.normalize_yf_quotes import \
     normalize_yf_base_data
 from personal_screener.data.base_data.yf_data import get_yf_data

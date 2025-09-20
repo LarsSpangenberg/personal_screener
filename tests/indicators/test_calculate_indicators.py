@@ -2,11 +2,11 @@ import unittest
 
 import pandas as pd
 
-from personal_screener.core.enrich_quotes import \
-    calculate_indicators_and_signals
 from personal_screener.core.indicators.moving_averages import \
     calculate_moving_averages
 from personal_screener.core.indicators.rsi import calculate_rsi
+from personal_screener.core.screen.enrich_quotes import \
+    calculate_indicators_and_signals
 from personal_screener.schemas.quote import Quote
 
 

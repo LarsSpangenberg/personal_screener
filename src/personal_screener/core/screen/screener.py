@@ -1,7 +1,9 @@
 import subprocess
+from typing import Literal
 
-from personal_screener.core.apply_filters import apply_filters
 from personal_screener.core.logging_config import setup_logging
+from personal_screener.core.screen.apply_filters import apply_filters
+from personal_screener.core.screen.sort_quotes import sort_quotes
 from personal_screener.data.base_data.yf_filters import default_filters
 from personal_screener.data.cache_manager import (
     CACHE_DIR,
@@ -9,6 +11,8 @@ from personal_screener.data.cache_manager import (
 )
 from personal_screener.data.initialize_data import initialize_data
 from personal_screener.schemas.filters import ScreenerFilters
+
+SortOption = Literal["score", "rsi", "name"]
 
 
 # === SCREENER LOGIC TO IMPLEMENT===================================
@@ -41,14 +45,12 @@ from personal_screener.schemas.filters import ScreenerFilters
 
 def screen(filters: ScreenerFilters = default_filters):
     data = load_quotes_from_cache()
-    if not data is None:
-        data = apply_filters(data, filters)
-    quotes = list(data.values())  # will add sort and filtering later
-    # handle normalized data
-    #   apply filters for enriched data
-    #   apply sorting/grouping as the last thing
+    if not data:
+        return []
 
-    return quotes
+    data = apply_filters(data, filters)
+    sorted_quotes =  sort_quotes(data)
+    return sorted_quotes
 
 
 if __name__ == "__main__":
