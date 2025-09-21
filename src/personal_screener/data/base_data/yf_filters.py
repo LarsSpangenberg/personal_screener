@@ -5,10 +5,11 @@ from personal_screener.data.base_data.yf_queries import (
     handle_market_cap, handle_price_range,
 )
 from personal_screener.schemas.filters import ScreenerFilters
+from personal_screener.schemas.types import GTE
 
 # NOTE: US region is always applied by default
 default_filters = ScreenerFilters(
-    avg_vol = ('GTE', 500000),
+    avg_vol = (GTE, 500000),
     price_range = (7, 100),
 )
 
