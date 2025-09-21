@@ -13,8 +13,12 @@ logger = logging.getLogger(__name__)
 
 # === Present in the screener quote ===
 # regularMarketPrice
+# regularMarketOpen
 # regularMarketDayLow
 # regularMarketDayHigh
+# regularMarketChangePercent
+# regularMarketPreviousClose
+# regularMarketVolume
 # fiftyTwoWeekLow
 # fiftyTwoWeekHigh
 # fiftyTwoWeekRange
@@ -30,15 +34,12 @@ logger = logging.getLogger(__name__)
 # dividendDate
 # averageDailyVolume3Month
 # averageDailyVolume10Day
-# regularMarketVolume
-# regularMarketChangePercent
 # fiftyTwoWeekChangePercent
 # trailingPE
 # forwardPE
 # priceToBook
 # bookValue
 # sharesOutstanding
-# regularMarketPreviousClose
 # fiftyDayAverage
 # twoHundredDayAverage
 # analystRating
@@ -76,6 +77,14 @@ def normalize_yf_quote(quote: dict) -> Quote:
     return Quote(
         symbol = quote.get("symbol"),
         price = day_close,
+
+        # OHLCV
+        open = quote.get("regularMarketOpen"),
+        high = quote.get("regularMarketDayHigh"),
+        low = quote.get("regularMarketDayLow"),
+        close = day_close,
+        day_vol = quote.get("regularMarketVolume"),
+
         market_cap = quote.get("marketCap"),
         avg_vol = quote.get("averageDailyVolume3Month"),
         ma50 = quote.get("fiftyDayAverage"),

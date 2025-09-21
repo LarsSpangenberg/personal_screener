@@ -1,4 +1,5 @@
 import json
+import subprocess
 from dataclasses import asdict
 from pathlib import Path
 
@@ -19,3 +20,6 @@ def save_quotes_to_cache(quotes: dict[str, Quote]):
 def load_quotes_from_cache() -> dict[str, Quote]:
     data = json.loads(CACHE_FILE.read_text())
     return {ticker: Quote(**fields) for ticker, fields in data.items()}
+
+if __name__ == "__main__":
+    subprocess.run(["explorer", str(CACHE_DIR)])

@@ -42,7 +42,8 @@ def generate_scores(
             if scoring_field.name.startswith("tiered_"):
                 if not isinstance(scoring_value, list):
                     logger.info(
-                        "Skipping scoring for field '%s': expected list[WeightedCondition], "
+                        "Skipping scoring for field '%s': expected list["
+                        "WeightedCondition], "
                         "but got %s (%r)",
                         scoring_field.name,
                         type(scoring_value).__name__,
@@ -57,6 +58,7 @@ def generate_scores(
 
                 for weighted_condition in weighted_condition_list:
                     score += evaluate_weighted_condition(
+                        quote,
                         scoring_field,
                         quote_value,
                         weighted_condition,
@@ -72,7 +74,7 @@ def generate_scores(
             # === Handle WeightedCondition
             if get_origin(declared_type) is WeightedCondition:
                 score += evaluate_weighted_condition(
-                    scoring_field, quote_value, scoring_value,
+                    quote, scoring_field, quote_value, scoring_value,
                 )
                 continue
 

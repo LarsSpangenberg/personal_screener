@@ -7,10 +7,19 @@ class Quote:
     # base data
     symbol: str
     price: float
+
+    # OHLCV daily
+    open: float
+    high: float
+    low: float
+    close: float
+    day_vol: int
+
     avg_vol: int
     market_cap: int
     ma50: Optional[float] = None
     ma200: Optional[float] = None
+
 
     # calculated indicators
     ma3: Optional[float] = None

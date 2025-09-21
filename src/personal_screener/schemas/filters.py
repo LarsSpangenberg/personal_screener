@@ -2,8 +2,10 @@ from dataclasses import dataclass
 from typing import Optional
 
 from personal_screener.schemas.types import (
-    BetweenCondition, MarketCap,
+    MarketCap,
     OperatorCondition,
+    PriceBetweenCondition,
+    PriceOperatorCondition,
 )
 
 
@@ -17,13 +19,13 @@ class ScreenerFilters:
     """
     market_cap: Optional[MarketCap] = None
     avg_vol: Optional[OperatorCondition] = None
-    price_range: Optional[BetweenCondition] = None
+    price_range: Optional[PriceBetweenCondition] = None
 
-    ma3: Optional[OperatorCondition] = None
-    ma10: Optional[OperatorCondition] = None
-    ma20: Optional[OperatorCondition] = None
-    ma50: Optional[OperatorCondition] = None
-    ma200: Optional[OperatorCondition] = None
+    ma3: Optional[PriceOperatorCondition] = None
+    ma10: Optional[PriceOperatorCondition] = None
+    ma20: Optional[PriceOperatorCondition] = None
+    ma50: Optional[PriceOperatorCondition] = None
+    ma200: Optional[PriceOperatorCondition] = None
     rsi: Optional[OperatorCondition] = None
 
     # signals

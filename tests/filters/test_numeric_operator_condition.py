@@ -1,6 +1,6 @@
 import unittest
 
-from personal_screener.core.evaluators.numeric_operator_conditions import \
+from personal_screener.core.evaluators.operator_conditions import \
     evaluate_numeric_operator_condition
 
 

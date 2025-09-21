@@ -3,15 +3,25 @@ from typing import get_origin
 
 from personal_screener.core.evaluators.market_cap_condition import \
     evaluate_market_cap
-from personal_screener.core.evaluators.numeric_operator_conditions import \
-    evaluate_numeric_operator_condition
-from personal_screener.core.evaluators.numeric_range_condition import \
-    evaluate_numeric_range
+from personal_screener.core.evaluators.operator_conditions import \
+    (
+    evaluate_numeric_operator_condition,
+    evaluate_price_operator_condition,
+)
+from personal_screener.core.evaluators.range_conditions import \
+    (
+    evaluate_numeric_range,
+    evaluate_price_range_condition,
+)
 from personal_screener.core.utils import unwrap_optional
 from personal_screener.data.base_data.yf_filters import default_filters
 from personal_screener.schemas.filters import ScreenerFilters
 from personal_screener.schemas.types import (
-    BetweenCondition, OperatorCondition, QuoteData,
+    BetweenCondition,
+    OperatorCondition,
+    PriceBetweenCondition,
+    PriceOperatorCondition,
+    QuoteData,
 )
 
 SKIP_FILTER_FIELDS = {'avg_vol', 'price_range'}
@@ -53,7 +63,7 @@ def apply_filters(quotes: QuoteData, filters: ScreenerFilters) -> QuoteData:
                 continue
 
             # === Range filters ===
-            if declared_type is BetweenCondition:
+            elif declared_type is BetweenCondition:
                 min_value, max_value = filter_value
                 if not evaluate_numeric_range(
                         quote_value, min_value, max_value,
@@ -62,8 +72,16 @@ def apply_filters(quotes: QuoteData, filters: ScreenerFilters) -> QuoteData:
                     break
                 continue
 
+            elif declared_type is PriceBetweenCondition:
+                if not evaluate_price_range_condition(
+                        quote, quote_value, filter_value,
+                ):
+                    keep = False
+                    break
+                continue
+
             # === Operator filters ===
-            if declared_type is OperatorCondition:
+            elif declared_type is OperatorCondition:
                 if not evaluate_numeric_operator_condition(
                         quote_value, filter_value,
                 ):
@@ -71,22 +89,30 @@ def apply_filters(quotes: QuoteData, filters: ScreenerFilters) -> QuoteData:
                     break
                 continue
 
+            elif declared_type is PriceOperatorCondition:
+                if not evaluate_price_operator_condition(
+                        quote, quote_value, filter_value,
+                ):
+                    keep = False
+                    break
+                continue
+
             # === Boolean filters ===
-            if declared_type is bool:
+            elif declared_type is bool:
                 if quote_value != filter_value:
                     keep = False
                     break
                 continue
 
             # === String match ===
-            if declared_type is str:
+            elif declared_type is str:
                 if quote_value != filter_value:
                     keep = False
                     break
                 continue
 
             # === Membership list ===
-            if get_origin(declared_type) in (list, set):
+            elif get_origin(declared_type) in (list, set):
                 if quote_value not in filter_value:
                     keep = False
                     break

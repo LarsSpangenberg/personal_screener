@@ -2,7 +2,11 @@ from dataclasses import dataclass
 from typing import Generic, Optional, TypeVar, overload
 
 from personal_screener.schemas.types import (
-    BetweenCondition, MarketCap, OperatorCondition,
+    BetweenCondition,
+    MarketCap,
+    OperatorCondition,
+    PriceBetweenCondition,
+    PriceOperatorCondition,
 )
 
 T = TypeVar("T")
@@ -24,6 +28,16 @@ def make_weighted(weight: int, condition: OperatorCondition) -> \
 @overload
 def make_weighted(weight: int, condition: BetweenCondition) -> \
         WeightedCondition[BetweenCondition]: ...
+
+
+@overload
+def make_weighted(weight: int, condition: PriceOperatorCondition) -> \
+        WeightedCondition[PriceOperatorCondition]: ...
+
+
+@overload
+def make_weighted(weight: int, condition: PriceBetweenCondition) -> \
+        WeightedCondition[PriceBetweenCondition]: ...
 
 
 @overload

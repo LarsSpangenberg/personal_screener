@@ -8,7 +8,7 @@ Created on Tue Sep  2 19:33:34 2025.
 import logging
 
 from personal_screener.core.logging_config import setup_logging
-from personal_screener.core.screener import screen
+from personal_screener.core.screen.screener import screen
 
 logger = logging.getLogger(__name__)
 

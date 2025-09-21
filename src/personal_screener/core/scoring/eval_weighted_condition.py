@@ -4,22 +4,28 @@ from typing import get_args, get_origin
 from personal_screener.core.evaluators.market_cap_condition import (
     evaluate_market_cap,
 )
-from personal_screener.core.evaluators.numeric_operator_conditions import (
-    evaluate_numeric_operator_condition,
+from personal_screener.core.evaluators.operator_conditions import (
+    evaluate_numeric_operator_condition, evaluate_price_operator_condition,
 )
-from personal_screener.core.evaluators.numeric_range_condition import (
-    evaluate_numeric_range,
+from personal_screener.core.evaluators.range_conditions import (
+    evaluate_numeric_range, evaluate_price_range_condition,
 )
 from personal_screener.core.utils import unwrap_optional
+from personal_screener.schemas.quote import Quote
 from personal_screener.schemas.types import (
     BetweenCondition,
     OperatorCondition,
+    PriceBetweenCondition,
+    PriceOperatorCondition,
 )
 from personal_screener.schemas.weighted_condition import WeightedCondition
 
 
 def evaluate_weighted_condition(
-    scoring_field: Field, quote_value, weighted_condition: WeightedCondition,
+    quote: Quote,
+    scoring_field: Field,
+    quote_value,
+    weighted_condition: WeightedCondition,
 ) -> int:
     """
     Evaluate a WeightedCondition using the declared inner type of the field.
@@ -48,9 +54,17 @@ def evaluate_weighted_condition(
         if evaluate_numeric_range(quote_value, min_value, max_value):
             return weight
 
+    elif declared_type is PriceBetweenCondition:
+        if evaluate_price_range_condition(quote, quote_value, condition):
+            return weight
+
     # === OperatorCondition ===
     elif declared_type is OperatorCondition:
         if evaluate_numeric_operator_condition(quote_value, condition):
+            return weight
+
+    elif declared_type is PriceOperatorCondition:
+        if evaluate_price_operator_condition(quote, quote_value, condition):
             return weight
 
     # === Boolean ===

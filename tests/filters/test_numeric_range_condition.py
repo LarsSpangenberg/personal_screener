@@ -1,6 +1,6 @@
 import unittest
 
-from personal_screener.core.evaluators.numeric_range_condition import \
+from personal_screener.core.evaluators.range_conditions import \
     evaluate_numeric_range
 
 

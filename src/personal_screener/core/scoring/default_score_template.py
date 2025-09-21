@@ -7,6 +7,8 @@ default_scoring_template = ScoringTemplate(
     # === Base data ===
     avg_vol = make_weighted(1, ("GTE", 1_000_000)),
     market_cap = make_weighted(1, "MID"),
+    ma50 = make_weighted(10, ("LTE", "LOW")),
+    ma200 = make_weighted(10, ("LTE", "LOW")),
 
     # === Tiered price ranges ===
     tiered_price_range = [
