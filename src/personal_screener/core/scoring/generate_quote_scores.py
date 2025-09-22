@@ -1,6 +1,6 @@
 import logging
 from dataclasses import fields
-from typing import cast, get_origin
+from typing import get_origin
 
 from personal_screener.core.scoring.default_score_template import \
     default_scoring_template
@@ -34,40 +34,37 @@ def generate_scores(
             if scoring_value is None:
                 continue
 
+            # handle "additional" field
+            if scoring_field.name == "additional":
+                for field_name, weighted_condition in scoring_value:
+                    # resolve field, quote value
+                    quote_field_name = get_quote_field_name(field_name)
+                    quote_value = getattr(quote, quote_field_name, None)
+                    if quote_value is None:
+                        continue
+
+                    # grab the scoring_field for type info, if it exists
+                    matched_scoring_field = next(
+                        (f for f in fields(ScoringTemplate) if
+                            f.name == field_name),
+                        None,
+                    )
+
+                    score += evaluate_weighted_condition(
+                        quote,
+                        matched_scoring_field,
+                        quote_value,
+                        weighted_condition,
+                    )
+                continue
+
+            # -----------------------------------------------------
             quote_field_name = get_quote_field_name(scoring_field.name)
             quote_value = getattr(quote, quote_field_name, None)
             if quote_value is None:
                 continue
 
             declared_type = unwrap_optional(scoring_field.type)
-
-            # === Tiered fields ===
-            if scoring_field.name.startswith("tiered_"):
-                if not isinstance(scoring_value, list):
-                    logger.info(
-                        "Skipping scoring for field '%s': expected list["
-                        "WeightedCondition], "
-                        "but got %s (%r)",
-                        scoring_field.name,
-                        type(scoring_value).__name__,
-                        scoring_value,
-                    )
-                    continue
-
-                weighted_condition_list = cast(
-                    list[WeightedCondition],
-                    scoring_value,
-                )
-                for weighted_condition in weighted_condition_list:
-                    if evaluate_weighted_condition(
-                            quote,
-                            scoring_field,
-                            quote_value,
-                            weighted_condition,
-                    ):
-                        score += weighted_condition.weight
-                        break
-                continue
 
             # === Handle int for basic booleans ===
             if declared_type is int:

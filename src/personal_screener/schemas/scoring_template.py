@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 from personal_screener.schemas.price_value import (
@@ -25,10 +25,6 @@ class ScoringTemplate:
     ma50: Optional[WeightedCondition[PriceOperatorCondition]] = None
     ma200: Optional[WeightedCondition[PriceOperatorCondition]] = None
 
-    # tiered scoring fields
-    tiered_price_range: Optional[
-        list[WeightedCondition[PriceBetweenCondition]]] = None
-
     # calculated indicators
     ma3: Optional[WeightedCondition[PriceOperatorCondition]] = None
     ma10: Optional[WeightedCondition[PriceOperatorCondition]] = None
@@ -38,3 +34,8 @@ class ScoringTemplate:
     # signals
     is_3ma_trending_up: Optional[int] = None
     is_10ma_trending_up: Optional[int] = None
+
+    # additional weighted conditions if one is not enough
+    additional: list[tuple[str, WeightedCondition]] = field(
+        default_factory = list,
+    )

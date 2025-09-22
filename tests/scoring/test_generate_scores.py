@@ -1,11 +1,11 @@
 import unittest
 
-from tests.utils import make_test_quote
 from personal_screener.core.scoring.generate_quote_scores import \
     generate_scores
 from personal_screener.schemas.scoring_template import ScoringTemplate
-from personal_screener.schemas.weighted_condition import make_weighted
 from personal_screener.schemas.types import GT, MID
+from personal_screener.schemas.weighted_condition import make_weighted
+from tests.utils import make_test_quote
 
 
 class TestGenerateQuoteScores(unittest.TestCase):
@@ -22,17 +22,6 @@ class TestGenerateQuoteScores(unittest.TestCase):
         )
         scores = generate_scores({"AAA": quote}, template)
         self.assertEqual(scores["AAA"], 3)
-
-    def test_tiered_price_range(self):
-        quote = make_test_quote("BBB", 30)
-        template = ScoringTemplate(
-            tiered_price_range = [
-                make_weighted(3, (20, 40)),
-                make_weighted(2, (40, 50)),
-            ],
-        )
-        scores = generate_scores({"BBB": quote}, template)
-        self.assertEqual(scores["BBB"], 3)
 
     def test_boolean_fields_add_weight(self):
         quote = make_test_quote("CCC", 40)
@@ -63,3 +52,44 @@ class TestGenerateQuoteScores(unittest.TestCase):
         )
         scores = generate_scores({"X": q1, "Y": q2}, template)
         self.assertGreater(scores["X"], scores["Y"])
+
+    def test_additional_price_range_conditions_accumulating(self):
+        quote = make_test_quote("BBB", 30)
+        template = ScoringTemplate(
+            price_range = make_weighted(5, (10, 40)), # matches
+            additional = [
+                ("price_range", make_weighted(2, (20, 25))),  # not matched
+                ("price_range", make_weighted(3, (25, 35))),  # matched
+            ],
+        )
+        scores = generate_scores({"BBB": quote}, template)
+        # base + matching additional = 5 + 3
+        self.assertEqual(scores["BBB"], 8)
+
+    def test_additional_price_range_conditions_only_base_matches(self):
+        quote = make_test_quote("DDD", 35)
+        template = ScoringTemplate(
+            price_range = make_weighted(5, (10, 40)),  # matches
+            additional = [
+                ("price_range", make_weighted(2, (20, 25))),  # not matched
+                ("price_range", make_weighted(3, (50, 100))),  # not matched
+            ],
+        )
+        scores = generate_scores({"DDD": quote}, template)
+        # only base condition matches -> 5
+        self.assertEqual(scores["DDD"], 5)
+
+    def test_additional_price_range_conditions_only_one_additional_matches(
+        self,
+    ):
+        quote = make_test_quote("EEE", 75)
+        template = ScoringTemplate(
+            price_range = make_weighted(5, (10, 40)),  # not matched
+            additional = [
+                ("price_range", make_weighted(2, (20, 25))),  # not matched
+                ("price_range", make_weighted(3, (50, 100))),  # matches
+            ],
+        )
+        scores = generate_scores({"EEE": quote}, template)
+        # only one additional condition matches -> 3
+        self.assertEqual(scores["EEE"], 3)

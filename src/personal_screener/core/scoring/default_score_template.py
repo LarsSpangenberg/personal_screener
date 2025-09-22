@@ -10,14 +10,13 @@ default_scoring_template = ScoringTemplate(
     market_cap = make_weighted(1, MID),
     ma50 = make_weighted(10, (LTE, CLOSE)),
     ma200 = make_weighted(10, (LTE, CLOSE)),
-
-    # === Tiered price ranges ===
-    tiered_price_range = [
-        make_weighted(3, (20, 50)),
-        make_weighted(1, (50, 100)),
-    ],
+    price_range = make_weighted(3, (20, 50)),
 
     # === Signals ===
     is_3ma_trending_up = 100,
     is_10ma_trending_up = 100,
+
+    additional = [
+        ("price_range", make_weighted(1, (50, 100))),
+    ],
 )

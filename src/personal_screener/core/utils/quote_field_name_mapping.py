@@ -7,8 +7,7 @@ def get_quote_field_name(template_field_name: str) -> str:
 
     Rules:
       1. Check explicit FIELD_NAME_MAP overrides.
-      2. Strip 'tiered_' prefix.
-      3. Strip '_range' suffix.
+      2. Strip '_range' suffix.
 
     Returns:
         Quote field name, hopefully.
@@ -17,8 +16,6 @@ def get_quote_field_name(template_field_name: str) -> str:
         return FIELD_NAME_MAP[template_field_name]
 
     name = template_field_name
-    if name.startswith("tiered_"):
-        name = name[len("tiered_"):]
     if name.endswith("_range"):
         name = name[: -len("_range")]
 
