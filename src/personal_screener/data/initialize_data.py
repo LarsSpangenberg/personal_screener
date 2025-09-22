@@ -1,7 +1,7 @@
 import logging
 import subprocess
 
-from personal_screener.core.logging_config import setup_logging
+from personal_screener.core.utils.logging_config import setup_logging
 from personal_screener.core.screen.enrich_quotes import \
     calculate_indicators_and_signals
 from personal_screener.data.base_data.normalize_yf_quotes import \

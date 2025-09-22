@@ -1,7 +1,7 @@
 import subprocess
 from typing import Literal
 
-from personal_screener.core.logging_config import setup_logging
+from personal_screener.core.utils.logging_config import setup_logging
 from personal_screener.core.screen.apply_filters import apply_filters
 from personal_screener.core.screen.sort_quotes import sort_quotes
 from personal_screener.data.base_data.yf_filters import default_filters

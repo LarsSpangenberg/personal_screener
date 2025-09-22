@@ -10,7 +10,7 @@ from personal_screener.core.evaluators.operator_conditions import (
 from personal_screener.core.evaluators.range_conditions import (
     evaluate_numeric_range, evaluate_price_range_condition,
 )
-from personal_screener.core.utils import unwrap_optional
+from personal_screener.core.utils.type_utils import unwrap_optional
 from personal_screener.schemas.price_value import (
     PriceBetweenCondition,
     PriceOperatorCondition,

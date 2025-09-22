@@ -6,7 +6,9 @@ from personal_screener.core.scoring.default_score_template import \
     default_scoring_template
 from personal_screener.core.scoring.eval_weighted_condition import \
     evaluate_weighted_condition
-from personal_screener.core.utils import unwrap_optional
+from personal_screener.core.utils.quote_field_name_mapping import \
+    get_quote_field_name
+from personal_screener.core.utils.type_utils import unwrap_optional
 from personal_screener.schemas.scoring_template import ScoringTemplate
 from personal_screener.schemas.types import QuoteData, QuoteScores
 from personal_screener.schemas.weighted_condition import WeightedCondition
@@ -32,7 +34,8 @@ def generate_scores(
             if scoring_value is None:
                 continue
 
-            quote_value = getattr(quote, scoring_field.name, None)
+            quote_field_name = get_quote_field_name(scoring_field.name)
+            quote_value = getattr(quote, quote_field_name, None)
             if quote_value is None:
                 continue
 
@@ -55,14 +58,15 @@ def generate_scores(
                     list[WeightedCondition],
                     scoring_value,
                 )
-
                 for weighted_condition in weighted_condition_list:
-                    score += evaluate_weighted_condition(
-                        quote,
-                        scoring_field,
-                        quote_value,
-                        weighted_condition,
-                    )
+                    if evaluate_weighted_condition(
+                            quote,
+                            scoring_field,
+                            quote_value,
+                            weighted_condition,
+                    ):
+                        score += weighted_condition.weight
+                        break
                 continue
 
             # === Handle int for basic booleans ===

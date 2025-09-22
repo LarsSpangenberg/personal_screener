@@ -13,7 +13,9 @@ from personal_screener.core.evaluators.range_conditions import \
     evaluate_numeric_range,
     evaluate_price_range_condition,
 )
-from personal_screener.core.utils import unwrap_optional
+from personal_screener.core.utils.quote_field_name_mapping import \
+    get_quote_field_name
+from personal_screener.core.utils.type_utils import unwrap_optional
 from personal_screener.data.base_data.yf_filters import default_filters
 from personal_screener.schemas.filters import ScreenerFilters
 from personal_screener.schemas.price_value import (
@@ -51,9 +53,7 @@ def apply_filters(quotes: QuoteData, filters: ScreenerFilters) -> QuoteData:
                 continue
 
             # Map filter field -> quote field if mapping exists
-            quote_field_name = FILTER_TO_QUOTE_FIELD.get(
-                filter_field.name, filter_field.name,
-            )
+            quote_field_name = get_quote_field_name(filter_field.name)
 
             quote_value = getattr(quote, quote_field_name, None)
             declared_type = unwrap_optional(filter_field.type)
