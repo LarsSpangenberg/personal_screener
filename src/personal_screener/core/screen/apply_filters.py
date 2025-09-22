@@ -16,11 +16,13 @@ from personal_screener.core.evaluators.range_conditions import \
 from personal_screener.core.utils import unwrap_optional
 from personal_screener.data.base_data.yf_filters import default_filters
 from personal_screener.schemas.filters import ScreenerFilters
+from personal_screener.schemas.price_value import (
+    PriceBetweenCondition,
+    PriceOperatorCondition,
+)
 from personal_screener.schemas.types import (
     BetweenCondition,
     OperatorCondition,
-    PriceBetweenCondition,
-    PriceOperatorCondition,
     QuoteData,
 )
 

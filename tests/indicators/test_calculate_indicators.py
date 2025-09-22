@@ -10,6 +10,43 @@ from personal_screener.core.screen.enrich_quotes import \
 from personal_screener.schemas.quote import Quote
 
 
+def make_test_quote(
+    symbol: str,
+    price: float,
+    avg_vol: int = 1_000_000,
+    market_cap: int = 10_000_000,
+    day_vol: int = 1000,
+    open_: float | None = None,
+    high: float | None = None,
+    low: float | None = None,
+    close: float | None = None,
+) -> Quote:
+    """
+    Build a Quote with sensible dummy defaults for tests.
+    OHLC fields default to the given `price` unless overridden.
+    """
+    if open_ is None:
+        open_ = price
+    if high is None:
+        high = price
+    if low is None:
+        low = price
+    if close is None:
+        close = price
+
+    return Quote(
+        symbol = symbol,
+        price = price,
+        open = open_,
+        high = high,
+        low = low,
+        close = close,
+        day_vol = day_vol,
+        avg_vol = avg_vol,
+        market_cap = market_cap,
+    )
+
+
 def _build_multiindex_ohlcv(
     close_a, close_b = None, ticker_a = "AAA", ticker_b = "BBB",
 ):
@@ -19,9 +56,10 @@ def _build_multiindex_ohlcv(
             [["Open","High","Low","Close","Volume"], [tickers...]]
         )
     and rows indexed by the index of the input close series.
-    For simplicity, we generate Open/High/Low as offsets of Close, and Volume as constant.
+    For simplicity, we generate Open/High/Low as offsets of Close,
+    and Volume as constant.
     """
-    idx = close_a.index
+    date_index = close_a.index
     fields = ["Open", "High", "Low", "Close", "Volume"]
     tickers = [ticker_a] + ([ticker_b] if close_b is not None else [])
     arrays = []
@@ -30,7 +68,7 @@ def _build_multiindex_ohlcv(
         arrays.extend([(f, t) for f in fields])
 
     columns = pd.MultiIndex.from_tuples(arrays, names = ["Field", "Ticker"])
-    df = pd.DataFrame(index = idx, columns = columns, dtype = "float64")
+    df = pd.DataFrame(index = date_index, columns = columns, dtype = "float64")
 
     # helper to fill one ticker's OHLCV given a close series
     def _fill_for_ticker(ticker, close):
@@ -43,7 +81,7 @@ def _build_multiindex_ohlcv(
     _fill_for_ticker(ticker_a, close_a)
     if close_b is not None:
         _fill_for_ticker(
-            ticker_b, close_b.reindex(idx, method = None).fillna(
+            ticker_b, close_b.reindex(date_index, method = None).fillna(
                 method = "ffill",
             ),
         )
@@ -54,25 +92,21 @@ def _build_multiindex_ohlcv(
 class TestCalculateIndicators(unittest.TestCase):
     def test_assigns_indicator_values_into_quotes(self):
         # Prepare two tickers with sufficient history
-        idx = pd.date_range("2024-01-01", periods = 60, freq = "D")
+        date_index = pd.date_range("2024-01-01", periods = 60, freq = "D")
         close_a = pd.Series(
-            [float(i) for i in range(1, 61)], index = idx,
+            [float(i) for i in range(1, 61)],
+            index = date_index,
         )  # steady uptrend
         close_b = pd.Series(
-            [float(200 - i) for i in range(0, 60)], index = idx,
+            [float(200 - i) for i in range(0, 60)],
+            index = date_index,
         )  # steady downtrend
 
         price_history = _build_multiindex_ohlcv(close_a, close_b, "AAA", "BBB")
 
         quotes = {
-            "AAA": Quote(
-                symbol = "AAA", price = close_a.iloc[-1], avg_vol = 1_000_000,
-                market_cap = 10_000_000,
-            ),
-            "BBB": Quote(
-                symbol = "BBB", price = close_b.iloc[-1], avg_vol = 1_000_000,
-                market_cap = 10_000_000,
-            ),
+            "AAA": make_test_quote("AAA", close_a.iloc[-1]),
+            "BBB": make_test_quote("BBB", close_b.iloc[-1]),
         }
 
         updated = calculate_indicators_and_signals(price_history, quotes)
@@ -119,19 +153,16 @@ class TestCalculateIndicators(unittest.TestCase):
 
     def test_missing_ticker_in_price_history_leaves_quote_unchanged(self):
         # Only include AAA in price_history; BBB will be absent
-        idx = pd.date_range("2024-01-01", periods = 40, freq = "D")
-        close_a = pd.Series([float(i) for i in range(1, 41)], index = idx)
+        date_index = pd.date_range("2024-01-01", periods = 40, freq = "D")
+        close_a = pd.Series(
+            [float(i) for i in range(1, 41)],
+            index = date_index,
+        )
         price_history = _build_multiindex_ohlcv(close_a, None, "AAA", "BBB")
 
         quotes = {
-            "AAA": Quote(
-                symbol = "AAA", price = close_a.iloc[-1], avg_vol = 500_000,
-                market_cap = 5_000_000,
-            ),
-            "BBB": Quote(
-                symbol = "BBB", price = 123.0, avg_vol = 500_000,
-                market_cap = 5_000_000,
-            ),
+            "AAA": make_test_quote("AAA", close_a.iloc[-1]),
+            "BBB": make_test_quote("BBB", 123.0),
         }
 
         updated = calculate_indicators_and_signals(price_history, quotes)
@@ -144,18 +175,13 @@ class TestCalculateIndicators(unittest.TestCase):
         self.assertIsNone(updated["BBB"].rsi)
 
     def test_short_series_results_in_nan_indicators(self):
-        idx = pd.date_range("2024-01-01", periods = 5, freq = "D")
+        date_index = pd.date_range("2024-01-01", periods = 5, freq = "D")
         close = pd.Series(
-            [100, 101, 102, 103, 104], index = idx, dtype = "float64",
+            [100, 101, 102, 103, 104], index = date_index, dtype = "float64",
         )
         price_history = _build_multiindex_ohlcv(close, None, "AAA", )
 
-        quotes = {
-            "AAA": Quote(
-                symbol = "AAA", price = close.iloc[-1], avg_vol = 1_000,
-                market_cap = 1_000_000,
-            ),
-        }
+        quotes = {"AAA": make_test_quote("AAA", close.iloc[-1])}
         updated = calculate_indicators_and_signals(price_history, quotes)
 
         # With only 5 points, MA20 and RSI(14) should be NaN

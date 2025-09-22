@@ -1,12 +1,14 @@
 from dataclasses import dataclass
 from typing import Generic, Optional, TypeVar, overload
 
+from personal_screener.schemas.price_value import (
+    PriceBetweenCondition,
+    PriceOperatorCondition,
+)
 from personal_screener.schemas.types import (
     BetweenCondition,
     MarketCap,
     OperatorCondition,
-    PriceBetweenCondition,
-    PriceOperatorCondition,
 )
 
 T = TypeVar("T")

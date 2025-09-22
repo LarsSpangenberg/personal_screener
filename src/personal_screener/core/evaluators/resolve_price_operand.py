@@ -1,8 +1,7 @@
 from typing import Optional
 
-from personal_screener.schemas.price_value import PriceValue
+from personal_screener.schemas.price_value import PriceOperand, PriceValue
 from personal_screener.schemas.quote import Quote
-from personal_screener.schemas.types import PriceOperand
 
 
 def resolve_operand(quote: Quote, operand: PriceOperand) -> Optional[float]:

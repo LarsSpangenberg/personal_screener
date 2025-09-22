@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 from typing import Optional
 
+from personal_screener.schemas.price_value import (
+    PriceBetweenCondition,
+    PriceOperatorCondition,
+)
 from personal_screener.schemas.types import (
     MarketCap,
     OperatorCondition,
-    PriceBetweenCondition,
-    PriceOperatorCondition,
 )
 from personal_screener.schemas.weighted_condition import WeightedCondition
 

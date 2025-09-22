@@ -11,12 +11,14 @@ from personal_screener.core.evaluators.range_conditions import (
     evaluate_numeric_range, evaluate_price_range_condition,
 )
 from personal_screener.core.utils import unwrap_optional
+from personal_screener.schemas.price_value import (
+    PriceBetweenCondition,
+    PriceOperatorCondition,
+)
 from personal_screener.schemas.quote import Quote
 from personal_screener.schemas.types import (
     BetweenCondition,
     OperatorCondition,
-    PriceBetweenCondition,
-    PriceOperatorCondition,
 )
 from personal_screener.schemas.weighted_condition import WeightedCondition
 

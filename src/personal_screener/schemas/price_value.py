@@ -1,8 +1,14 @@
 from dataclasses import dataclass
-from typing import Optional, Union
+from typing import Optional, Tuple, Union
 
 from personal_screener.schemas.quote import Quote
-from personal_screener.schemas.types import OHLC, Number
+from personal_screener.schemas.types import Number, OHLC, Operator
+
+# PriceValue Types
+PriceOperand = Number | OHLC | "PriceValue"
+PriceOperatorCondition = Tuple[Operator, PriceOperand]
+PriceBetweenCondition = Tuple[Optional[PriceOperand], Optional[PriceOperand]]
+
 
 @dataclass
 class PriceValue:

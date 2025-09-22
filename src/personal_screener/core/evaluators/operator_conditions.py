@@ -2,11 +2,9 @@ from typing import Callable
 
 from personal_screener.core.evaluators.resolve_price_operand import \
     resolve_operand
+from personal_screener.schemas.price_value import PriceOperatorCondition
 from personal_screener.schemas.quote import Quote
-from personal_screener.schemas.types import (
-    Number, OperatorCondition,
-    PriceOperatorCondition,
-)
+from personal_screener.schemas.types import Number, OperatorCondition
 
 OperatorFunction = Callable[[Number, Number], bool]
 
@@ -23,7 +21,8 @@ def evaluate_numeric_operator_condition(
     quote_value: Number, filter_condition: OperatorCondition,
 ) -> bool:
     """
-    Compare a Quote field (quote_value) against a filter condition (operator, filter_value).
+    Compare a Quote field (quote_value) against a filter condition (
+    operator, filter_value).
     Returns True if no filter is applied or the quote_value is None.
     """
     if filter_condition is None or quote_value is None:

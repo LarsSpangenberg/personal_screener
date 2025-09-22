@@ -1,7 +1,8 @@
 from personal_screener.core.evaluators.resolve_price_operand import \
     resolve_operand
+from personal_screener.schemas.price_value import PriceBetweenCondition
 from personal_screener.schemas.quote import Quote
-from personal_screener.schemas.types import Number, PriceBetweenCondition
+from personal_screener.schemas.types import Number
 
 
 def evaluate_numeric_range(
