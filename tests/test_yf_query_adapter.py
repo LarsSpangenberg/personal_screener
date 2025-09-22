@@ -4,11 +4,10 @@ from unittest.mock import patch
 from personal_screener.data.base_data import yf_filters, yf_queries
 from personal_screener.data.base_data.yf_filters import map_filters_to_yf_query
 from personal_screener.schemas.filters import ScreenerFilters
+from personal_screener.schemas.types import GTE
 
 
 class TestYfAdapter(unittest.TestCase):
-    #PATCH_BASIC = "src.data.base_data.yf_filters.create_basic_query"
-
     PATCH_BASIC = f"{yf_filters.__name__}.create_basic_query"
     PATCH_RANGE = f"{yf_queries.__name__}.create_range_query"
     PATCH_EQ = f"{yf_filters.__name__}.EquityQuery"
@@ -48,12 +47,12 @@ class TestYfAdapter(unittest.TestCase):
             MockBasic.assert_any_call("EQ", "region", "us")
             # Market cap MID should map to a range query
             MockRange.assert_any_call(
-                "intradaymarketcap", 2000000000, 10000000000,
+                "intradaymarketcap", 2_000_000_000, 10_000_000_000,
             )
 
     def test_convert_filters_to_yf_query_query_creation(self):
         filters = ScreenerFilters(
-            avg_vol = ("GTE", 500_000),
+            avg_vol = (GTE, 500_000),
         )
 
         # Patch both create_basic_query and EquityQuery
