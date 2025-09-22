@@ -39,6 +39,12 @@ def evaluate_weighted_condition(
     # get type from WeightedCondition generic type argument
     declared_type = unwrap_optional(get_args(scoring_field.type)[0])
 
+    # unwrap list[WeightedCondition[T]]
+    if get_origin(declared_type) is list:
+        inner_args = get_args(declared_type)
+        if inner_args and get_origin(inner_args[0]) is WeightedCondition:
+            declared_type = inner_args[0]
+
     # unwrap WeightedCondition[T] for tiered conditions
     if get_origin(declared_type) is WeightedCondition:
         inner_args = get_args(declared_type)
